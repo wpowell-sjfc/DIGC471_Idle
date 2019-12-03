@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System;
 
 public class SaveLoadJson : MonoBehaviour
 {
@@ -13,6 +14,15 @@ public class SaveLoadJson : MonoBehaviour
 
         GlobalLemonade.LemonadeCount = lemonSave.serializedLemonade;
         GlobalCash.CashCount = lemonSave.serializedPounds;
+
+        //Debug.Log((TimeSpan)(DateTime.UtcNow - 
+        //DateTime.Parse(lemonSave.serializedDateTime)));
+        if (lemonSave.serializedDateTime != null)
+        {
+            TimeSpan dTime = DateTime.UtcNow - DateTime.Parse(lemonSave.serializedDateTime);
+            GlobalLemonade.LemonadeCount += (int)(dTime.TotalSeconds);
+            Debug.Log("Generated " + (int)(dTime.TotalSeconds) + " cups of lemonade!");
+        }
 
         //For testing purposes
         Debug.Log("Lemonade: " + GlobalLemonade.LemonadeCount);
@@ -32,6 +42,10 @@ public class SaveLoadJson : MonoBehaviour
         //Pounds
         lemonSave.serializedPounds = GlobalCash.CashCount;
         LemonSave.pounds = lemonSave.serializedPounds;
+
+        //Time
+        lemonSave.serializedDateTime = DateTime.UtcNow.
+            ToString("HH:mm:ss dd MMMM, yyyy");
 
         Debug.Log("Saving Lemonade Value: " + GlobalLemonade.LemonadeCount);
         Debug.Log("Saving Cash Value: " + GlobalCash.CashCount);
@@ -67,4 +81,5 @@ public class LemonSave
     public static int lemonade;
     public static int pounds;
     public static bool loaded = false;
+    public string serializedDateTime;
 }
